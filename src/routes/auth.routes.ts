@@ -61,6 +61,7 @@ router.post('/login', async (req: Request, res: Response) => {
       id: user._id,
       username: user.username,
       email: user.email,
+      token: token,
     };
 
     return sendSuccess(res, 201, 'Login successfully', userData);
@@ -79,7 +80,7 @@ router.get('/profile', authMiddleware, async (req: Request, res: Response) => {
       return sendError(res, 404, 'User not found');
     }
 
-    return sendSuccess(res, 200, '"Profile retrieved successfully"', user);
+    return sendSuccess(res, 200, 'Profile retrieved successfully', user);
   } catch (err) {
     console.error(err);
     return sendError(res, 500, 'internal server error');
