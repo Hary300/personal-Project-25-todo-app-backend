@@ -13,9 +13,9 @@ import { userSchema } from './validators/user.validator.js';
 import { validate } from './middlewares/validate.js';
 import type { AuthUser } from './types/authUser.js';
 import { authMiddleware } from './middlewares/auth.js';
-import { env } from './config/env.js';
 import { hashPassword } from './helpers/hashPassword.js';
 import { generateToken } from './helpers/generateToken.js';
+import { sendError, sendSuccess } from './helpers/response.js';
 
 const app = express();
 
@@ -33,9 +33,7 @@ app.post(
       const existingUser = await User.findOne({ email });
 
       if (existingUser) {
-        return res.status(400).json({
-          message: 'Email already registered',
-        });
+        return sendError(res, 400, 'Email already registered');
       }
 
       const hashedPassword = await hashPassword(plainPassword);
@@ -48,17 +46,10 @@ app.post(
 
       const { password, ...safeDataUser } = newUser.toObject();
 
-      return res.status(201).json({
-        success: true,
-        message: 'new user created',
-        data: safeDataUser,
-      });
+      return sendSuccess(res, 201, 'New user created', safeDataUser);
     } catch (err) {
       console.error(err);
-      return res.status(500).json({
-        success: false,
-        message: 'internal server error',
-      });
+      return sendError(res, 500, 'Internal server error');
     }
   }
 );
@@ -68,39 +59,27 @@ app.post('/login', async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user || !user.password) {
-      return res.status(400).json({
-        success: false,
-        message: 'Invalid credentials',
-      });
+      return sendError(res, 400, 'Invalid credentials');
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({
-        success: false,
-        message: 'Password invalid',
-      });
+      return sendError(res, 400, 'Password invalid');
     }
 
     const token = generateToken(user.id);
 
-    res.status(200).json({
-      success: true,
-      message: 'Login successfully',
-      token,
-      user: {
-        id: user._id,
-        username: user.username,
-        email: user.email,
-      },
-    });
+    const userData = {
+      id: user._id,
+      username: user.username,
+      email: user.email,
+    };
+
+    return sendSuccess(res, 201, 'Login successfully', userData);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({
-      success: false,
-      message: 'internal server error',
-    });
+    return sendError(res, 500, 'internal server error');
   }
 });
 
@@ -110,22 +89,13 @@ app.get('/profile', authMiddleware, async (req, res) => {
     const user = await User.findById(decoded.id).select('-password');
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'User not found',
-      });
+      return sendError(res, 404, 'User not found');
     }
 
-    return res.status(200).json({
-      success: true,
-      user,
-    });
+    return sendSuccess(res, 200, '"Profile retrieved successfully"', user);
   } catch (err) {
     console.error(err);
-    return res.status(500).json({
-      success: false,
-      message: 'internal server error',
-    });
+    return sendError(res, 500, 'internal server error');
   }
 });
 
