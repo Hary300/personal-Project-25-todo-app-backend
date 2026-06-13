@@ -2,6 +2,8 @@ import type { Request, Response } from 'express';
 import { User } from '../models/User.js';
 import { sendError, sendSuccess } from '../helpers/response.js';
 import { hashPassword } from '../helpers/hashPassword.js';
+import bcrypt from 'bcrypt';
+import { generateToken } from '../helpers/generateToken.js';
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -29,7 +31,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-const login = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
