@@ -13,9 +13,15 @@ export function sendSuccess(
   });
 }
 
-export function sendError(res: Response, statusCode: number, message: string) {
+export function sendError(
+  res: Response,
+  statusCode: number,
+  message: string,
+  data?: unknown
+) {
   return res.status(statusCode).json({
     success: false,
     message,
+    data,
   });
 }

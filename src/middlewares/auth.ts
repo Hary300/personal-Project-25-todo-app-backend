@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import type { AuthUser } from '../types/authUser.js';
 import { env } from '../config/env.js';
+import { sendError } from '../helpers/response.js';
 
 export const authMiddleware = (
   req: Request,
@@ -11,19 +12,13 @@ export const authMiddleware = (
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
-    return res.status(401).json({
-      success: false,
-      message: 'No token provided',
-    });
+    return sendError(res, 401, 'No token provided');
   }
 
   const token = authHeader.split(' ')[1];
 
   if (!token) {
-    return res.status(401).json({
-      success: false,
-      message: 'Token not provided',
-    });
+    return sendError(res, 401, 'No token provided');
   }
 
   try {
@@ -32,9 +27,6 @@ export const authMiddleware = (
 
     next();
   } catch (err) {
-    return res.status(401).json({
-      success: false,
-      message: 'invalid token',
-    });
+    return sendError(res, 401, 'Invalid token');
   }
 };
