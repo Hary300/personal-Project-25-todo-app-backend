@@ -7,9 +7,9 @@ import { profile } from '../controllers/user.controller.js';
 
 const router = Router();
 
-// router.get('/', (req, res) => {
-//   res.json({ ok: true });
-// });
+router.get('/', (req, res) => {
+  res.json({ ok: true });
+});
 
 router.post('/register', validate(userSchema), register);
 
