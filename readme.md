@@ -162,3 +162,23 @@ Error Response
   "error": {}
 }
 ```
+
+### 10. Features 📌
+
+- User registration & login
+- JWT authentication
+- Protected routes
+- Password encryption
+- Input validation
+- Modular architecture
+
+### 11. Deployment 🚀
+
+Recommended platforms:
+
+Railway
+Render
+
+### 👨‍💻 Author
+
+Hary300
