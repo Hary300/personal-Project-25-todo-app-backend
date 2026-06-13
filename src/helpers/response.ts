@@ -17,11 +17,11 @@ export function sendError(
   res: Response,
   statusCode: number,
   message: string,
-  data?: unknown
+  error?: unknown
 ) {
   return res.status(statusCode).json({
     success: false,
     message,
-    data,
+    error,
   });
 }
