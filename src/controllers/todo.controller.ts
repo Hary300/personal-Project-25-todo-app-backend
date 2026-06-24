@@ -78,13 +78,102 @@ export const DeleteTodo = async (req: Request, res: Response) => {
   }
 };
 
-// export const EditTodo = async (req: Request, res: Response) => {};
+export const UpdateTodo = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
 
-// export const ToggleTodo = async (req: Request, res: Response) => {};
+    const updatedTodo = await Todo.findByIdAndUpdate(id, req.body, {
+      new: true, // Return the updated document
+      runValidators: true, //apply schema validation during update
+    });
 
-// export const SearchTodo = async (req: Request, res: Response) => {};
+    if (!updatedTodo) {
+      return sendError(res, 404, 'Todo not found');
+    }
+    return sendSuccess(res, 200, 'Todo updated successfully', updatedTodo);
+  } catch (err) {
+    console.log(err);
+    return sendError(res, 500, 'Internal server error');
+  }
+};
 
-// export const GetPriorityFilteredTodos = async (req: Request, res: Response) => {};
+export const ToggleTodo = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const todo = await Todo.findById(id);
+    if (!todo) {
+      return sendError(res, 404, 'Todo not found');
+    }
+
+    const toggledTodo = await Todo.findByIdAndUpdate(
+      id,
+      {
+        completed: !todo.completed,
+      },
+      { new: true }
+    );
+
+    return sendSuccess(res, 200, 'Todo toggled successfully', toggledTodo);
+  } catch (err) {
+    console.log(err);
+    return sendError(res, 500, 'Internal server error');
+  }
+};
+
+export const SearchTodo = async (req: Request, res: Response) => {
+  try {
+    const { keyword } = req.query;
+
+    if (typeof keyword !== 'string') {
+      return sendError(res, 400, 'Keyword is required');
+    }
+
+    const todos = await Todo.find({
+      task: {
+        $regex: keyword,
+        $options: 'i',
+      },
+    });
+
+    if (todos.length === 0) {
+      return sendError(res, 404, 'Todo not found');
+    }
+
+    return sendSuccess(res, 200, 'Todos retrieved successfully', todos);
+  } catch (err) {
+    console.log(err);
+    return sendError(res, 500, 'Internal server error');
+  }
+};
+
+export const GetPriorityFilteredTodos = async (req: Request, res: Response) => {
+  try {
+    const { level } = req.query;
+
+    if (level !== 'low' && level !== 'medium' && level !== 'high') {
+      return sendError(res, 400, 'Invalid priority');
+    }
+
+    const selectedPriorityTodos = await Todo.find({
+      priority: level,
+    });
+
+    if (selectedPriorityTodos.length === 0) {
+      return sendError(res, 404, 'Todos not found');
+    }
+
+    return sendSuccess(
+      res,
+      200,
+      'Todo with the determined priority retrieved successfully',
+      selectedPriorityTodos
+    );
+  } catch (err) {
+    console.log(err);
+    return sendError(res, 500, 'Internal server error');
+  }
+};
 
 export const CreateNewTodo = async (req: Request, res: Response) => {
   try {
