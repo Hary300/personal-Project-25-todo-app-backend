@@ -3,7 +3,9 @@ import cors from 'cors';
 
 import { connectDB } from './config/database.js';
 import authRoutes from './routes/auth.routes.js';
+import todoRoutes from './routes/todo.routes.js';
 import { env } from './config/env.js';
+import { authMiddleware } from './middlewares/auth.js';
 
 const app = express();
 
@@ -12,7 +14,13 @@ app.use(express.json());
 
 connectDB();
 
+app.get('/', (req, res) => {
+  res.json({ ok: true, greeting: 'Welcome to Hary300 dataBase' });
+});
+
 app.use('/api/auth', authRoutes);
+
+app.use('/api/todos', authMiddleware, todoRoutes);
 
 const PORT = env.PORT;
 

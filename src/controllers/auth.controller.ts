@@ -9,6 +9,7 @@ export const register = async (req: Request, res: Response) => {
   try {
     const { username, email, password: plainPassword } = req.body;
     const existingUser = await User.findOne({ email });
+    console.log(plainPassword);
 
     if (existingUser) {
       return sendError(res, 400, 'Email already registered');
