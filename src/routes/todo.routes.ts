@@ -14,20 +14,20 @@ import { todoSchema } from '../validators/todo.validator.js';
 import { validate } from '../middlewares/validate.js';
 
 const router = Router();
-// POST
+// CREATE (POST)
 router.post('/todos', validate(todoSchema), CreateNewTodo);
 
-// GET
+// READ (GET)
 router.get('/todos/today', GetTodayTodos);
 router.get('/todos/upcoming', GetUpcomingTodos);
 router.get('/todos/completed', GetCompletedTodos);
-router.get('/todos/search', SearchTodo);
 router.get('/todos/priority', GetPriorityFilteredTodos);
+router.get('/todos/search', SearchTodo);
 
-// PATCH
+// UPDATE (PATCH)
 router.patch('/todos/:id', UpdateTodo);
 router.patch('/todos/:id/toggle', ToggleTodo);
 
-// DELETE
+// DELETE (DELETE)
 router.delete('/todos/:id', DeleteTodo);
 export default router;
