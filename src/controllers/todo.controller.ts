@@ -19,7 +19,7 @@ export const CreateNewTodo = async (req: Request, res: Response) => {
       },
     });
 
-    if (!existingTodo) {
+    if (existingTodo) {
       return sendError(res, 400, 'Task already exists for this day.');
     }
 
