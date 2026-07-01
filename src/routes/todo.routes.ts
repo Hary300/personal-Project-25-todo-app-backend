@@ -15,19 +15,19 @@ import { validate } from '../middlewares/validate.js';
 
 const router = Router();
 // CREATE (POST)
-router.post('/todos', validate(todoSchema), CreateNewTodo);
+router.post('/', validate(todoSchema), CreateNewTodo);
 
 // READ (GET)
-router.get('/todos/today', GetTodayTodos);
-router.get('/todos/upcoming', GetUpcomingTodos);
-router.get('/todos/completed', GetCompletedTodos);
-router.get('/todos/priority', GetPriorityFilteredTodos);
-router.get('/todos/search', SearchTodo);
+router.get('/', SearchTodo);
+router.get('/today', GetTodayTodos);
+router.get('/upcoming', GetUpcomingTodos);
+router.get('/completed', GetCompletedTodos);
+router.get('/priority', GetPriorityFilteredTodos);
 
 // UPDATE (PATCH)
-router.patch('/todos/:id', UpdateTodo);
-router.patch('/todos/:id/toggle', ToggleTodo);
+router.patch('/:id', UpdateTodo);
+router.patch('/:id/toggle', ToggleTodo);
 
 // DELETE (DELETE)
-router.delete('/todos/:id', DeleteTodo);
+router.delete('/:id', DeleteTodo);
 export default router;
