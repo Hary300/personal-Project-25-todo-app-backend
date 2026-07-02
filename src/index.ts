@@ -4,6 +4,7 @@ import cors from 'cors';
 import { connectDB } from './config/database.js';
 import authRoutes from './routes/auth.routes.js';
 import todoRoutes from './routes/todo.routes.js';
+import userRoutes from './routes/user.routes.js';
 import { env } from './config/env.js';
 import { authMiddleware } from './middlewares/auth.js';
 
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/auth', userRoutes);
 
 app.use('/api/todos', authMiddleware, todoRoutes);
 
