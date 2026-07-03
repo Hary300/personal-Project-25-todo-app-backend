@@ -39,7 +39,7 @@ export const GetTodayTodos = async (req: Request, res: Response) => {
 
     const { start, end } = getTodayRange();
     const todayTodos = await Todo.find({
-      _id: userId,
+      userId: userId,
       date: {
         $gte: start,
         $lte: end,
