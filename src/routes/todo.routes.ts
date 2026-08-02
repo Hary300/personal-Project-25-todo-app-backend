@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   CreateNewTodo,
   DeleteTodo,
+  GetAllTodos,
   GetCompletedTodos,
   GetPriorityFilteredTodos,
   GetTodayTodos,
@@ -17,7 +18,18 @@ const router = Router();
 // CREATE (POST)
 router.post('/', validate(todoSchema), CreateNewTodo);
 
+/**
+ * @swagger
+ * /todos:
+ *    get:
+ *      summary: Get all todos
+ *      responses:
+ *        200:
+ *          description: Success
+ */
+
 // READ (GET)
+router.get('/', GetAllTodos);
 router.get('/search', SearchTodo);
 router.get('/today', GetTodayTodos);
 router.get('/upcoming', GetUpcomingTodos);

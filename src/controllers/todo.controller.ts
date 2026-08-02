@@ -33,6 +33,16 @@ export const CreateNewTodo = async (req: Request, res: Response) => {
 };
 
 // READ
+export const GetAllTodos = async (req: Request, res: Response) => {
+  try {
+    const allTodos = await Todo.find();
+    return sendSuccess(res, 200, 'All todos retrieved successfully', allTodos);
+  } catch (err) {
+    console.log(err);
+    return sendError(res, 500, 'Internal server error');
+  }
+};
+
 export const GetTodayTodos = async (req: Request, res: Response) => {
   try {
     const userId = req.user!.id;
