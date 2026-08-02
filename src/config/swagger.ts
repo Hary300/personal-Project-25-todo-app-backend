@@ -8,7 +8,7 @@ const options: Options = {
       version: '1.0.0',
       description: 'Documentation for Todo API',
     },
-    server: [
+    servers: [
       {
         url: 'http://localhost:3000',
       },
