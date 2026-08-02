@@ -18,7 +18,7 @@ const router = Router();
 router.post('/', validate(todoSchema), CreateNewTodo);
 
 // READ (GET)
-router.get('/', SearchTodo);
+router.get('/search', SearchTodo);
 router.get('/today', GetTodayTodos);
 router.get('/upcoming', GetUpcomingTodos);
 router.get('/completed', GetCompletedTodos);

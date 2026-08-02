@@ -6,6 +6,8 @@ import authRoutes from './routes/auth.routes.js';
 import todoRoutes from './routes/todo.routes.js';
 import { env } from './config/env.js';
 import { authMiddleware } from './middlewares/auth.js';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from './config/swagger.js';
 
 const app = express();
 
@@ -21,6 +23,8 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 
 app.use('/api/todos', authMiddleware, todoRoutes);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 const PORT = env.PORT;
 
