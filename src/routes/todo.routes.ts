@@ -20,7 +20,7 @@ router.post('/', validate(todoSchema), CreateNewTodo);
 
 /**
  * @swagger
- * api/todos:
+ * /api/todos:
  *    get:
  *      tags:
  *        - Todos
