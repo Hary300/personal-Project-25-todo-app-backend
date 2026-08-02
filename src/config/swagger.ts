@@ -13,7 +13,7 @@ const options: Options = {
         url: 'http://localhost:3000',
       },
       {
-        url: 'personal-project-25-todo-app-backend-production.up.railway.app',
+        url: 'https://personal-project-25-todo-app-backend-production.up.railway.app',
       },
     ],
   },
