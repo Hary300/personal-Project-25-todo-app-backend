@@ -22,6 +22,8 @@ router.post('/', validate(todoSchema), CreateNewTodo);
  * @swagger
  * /todos:
  *    get:
+ *      tags:
+ *        - Todos
  *      summary: Get all todos
  *      responses:
  *        200:
