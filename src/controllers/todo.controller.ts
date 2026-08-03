@@ -2,6 +2,7 @@ import type { Request, Response } from 'express';
 import { Todo } from '../models/Todo.js';
 import { getDateRange, getTodayRange } from '../helpers/getDateRange.js';
 import { sendError, sendSuccess } from '../helpers/response.js';
+import { querySchema } from '../schemas/querySchema.js';
 
 // CREATE
 export const CreateNewTodo = async (req: Request, res: Response) => {
@@ -35,12 +36,21 @@ export const CreateNewTodo = async (req: Request, res: Response) => {
 // READ
 export const GetAllTodos = async (req: Request, res: Response) => {
   try {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
+    const { limit, q, page } = querySchema.parse(req.query);
 
     const skip = (page - 1) * limit;
-    const total = await Todo.countDocuments();
-    const allTodos = await Todo.find().skip(skip).limit(limit);
+
+    const filter = q
+      ? {
+          task: {
+            $regex: q,
+            $options: 'i',
+          },
+        }
+      : {};
+    const total = await Todo.countDocuments(filter);
+
+    const allTodos = await Todo.find(filter).skip(skip).limit(limit);
     const pagination = {
       page,
       limit,

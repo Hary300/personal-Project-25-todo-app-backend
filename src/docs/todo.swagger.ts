@@ -87,6 +87,15 @@ export const todoDocs: OpenAPIV3.PathsObject = {
       parameters: [
         {
           in: 'query',
+          name: 'q',
+          required: false,
+          schema: {
+            type: 'string',
+          },
+          description: 'Search todos by task',
+        },
+        {
+          in: 'query',
           name: 'page',
           required: false,
           schema: {
@@ -103,7 +112,7 @@ export const todoDocs: OpenAPIV3.PathsObject = {
             type: 'integer',
             default: 10,
           },
-          description: 'Limit',
+          description: 'Number of todos per page',
         },
       ],
       responses: {
