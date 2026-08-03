@@ -35,8 +35,23 @@ export const CreateNewTodo = async (req: Request, res: Response) => {
 // READ
 export const GetAllTodos = async (req: Request, res: Response) => {
   try {
-    const allTodos = await Todo.find();
-    return sendSuccess(res, 200, 'All todos retrieved successfully', allTodos);
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+
+    const skip = (page - 1) * limit;
+    const total = await Todo.countDocuments();
+    const allTodos = await Todo.find().skip(skip).limit(limit);
+    const pagination = {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    };
+
+    return sendSuccess(res, 200, 'All todos retrieved successfully', {
+      todos: allTodos,
+      pagination,
+    });
   } catch (err) {
     console.log(err);
     return sendError(res, 500, 'Internal server error');

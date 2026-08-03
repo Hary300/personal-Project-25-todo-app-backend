@@ -17,7 +17,7 @@ export const todoDocs: OpenAPIV3.PathsObject = {
           'application/json': {
             schema: {
               type: 'object',
-              required: ['task', 'priority', 'date', 'complete'],
+              required: ['task', 'priority', 'date', 'completed'],
               properties: {
                 task: {
                   type: 'string',
@@ -45,6 +45,26 @@ export const todoDocs: OpenAPIV3.PathsObject = {
       responses: {
         '201': {
           description: 'Todo created successfully',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: true,
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Todo created successfully',
+                  },
+                  data: {
+                    $ref: '#/components/schemas/Todo',
+                  },
+                },
+              },
+            },
+          },
         },
         '400': {
           description: 'Invalid request',
@@ -66,7 +86,30 @@ export const todoDocs: OpenAPIV3.PathsObject = {
       ],
       responses: {
         '200': {
-          description: 'Success',
+          description: 'Todos retrieved successfully',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: true,
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Todos retrieved successfully',
+                  },
+                  data: {
+                    type: 'array',
+                    items: {
+                      $ref: '#/components/schemas/Todo',
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
         '401': {
           description: 'Unauthorized',
@@ -74,6 +117,7 @@ export const todoDocs: OpenAPIV3.PathsObject = {
       },
     },
   },
+
   // PATCH
   '/todos/{id}': {
     patch: {
@@ -136,10 +180,55 @@ export const todoDocs: OpenAPIV3.PathsObject = {
                   },
                   message: {
                     type: 'string',
-                    example: 'Todo update successfully',
+                    example: 'Todo updated successfully',
                   },
                   data: {
+                    type: 'array',
                     $ref: '#/components/schemas/Todo',
+                  },
+                },
+              },
+            },
+          },
+        },
+        '401': {
+          description: 'Unauthorized',
+        },
+        '404': {
+          description: 'Todo not found',
+        },
+      },
+    },
+    delete: {
+      tags: ['Todos'],
+      summary: 'Delete Todo',
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: 'path',
+          name: 'id',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+          example: '64f8a9c123456789',
+        },
+      ],
+      responses: {
+        '200': {
+          description: 'Todo deleted successfully',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: true,
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Todo deleted successfully',
                   },
                 },
               },
