@@ -74,4 +74,85 @@ export const todoDocs: OpenAPIV3.PathsObject = {
       },
     },
   },
+  // PATCH
+  '/todos/{id}': {
+    patch: {
+      tags: ['Todos'],
+      summary: 'Update Todo',
+      description: 'Update one or more fields of an existing todo.',
+      security: [{ bearerAuth: [] }],
+      parameters: [
+        {
+          in: 'path',
+          name: 'id',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+          example: '64f8a9c123456789',
+        },
+      ],
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                task: {
+                  type: 'string',
+                  example: 'Learn Swagger',
+                },
+                priority: {
+                  type: 'string',
+                  enum: ['low', 'medium', 'high'],
+                  example: 'high',
+                },
+                date: {
+                  type: 'string',
+                  format: 'date-time',
+                  example: '2026-08-03T10:00:00.000Z',
+                },
+                completed: {
+                  type: 'boolean',
+                  example: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        '200': {
+          description: 'Todo updated successfully',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  success: {
+                    type: 'boolean',
+                    example: true,
+                  },
+                  message: {
+                    type: 'string',
+                    example: 'Todo update successfully',
+                  },
+                  data: {
+                    $ref: '#/components/schemas/Todo',
+                  },
+                },
+              },
+            },
+          },
+        },
+        '401': {
+          description: 'Unauthorized',
+        },
+        '404': {
+          description: 'Todo not found',
+        },
+      },
+    },
+  },
 };
