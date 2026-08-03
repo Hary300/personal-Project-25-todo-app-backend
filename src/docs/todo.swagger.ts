@@ -101,9 +101,37 @@ export const todoDocs: OpenAPIV3.PathsObject = {
                     example: 'Todos retrieved successfully',
                   },
                   data: {
-                    type: 'array',
-                    items: {
-                      $ref: '#/components/schemas/Todo',
+                    type: 'object',
+                    required: ['todos', 'pagination'],
+                    properties: {
+                      todos: {
+                        type: 'array',
+                        items: {
+                          $ref: '#/components/schemas/Todo',
+                        },
+                      },
+                      pagination: {
+                        type: 'object',
+                        required: ['page', 'limit', 'total', 'totalPages'],
+                        properties: {
+                          page: {
+                            type: 'integer',
+                            example: 1,
+                          },
+                          limit: {
+                            type: 'integer',
+                            example: 10,
+                          },
+                          total: {
+                            type: 'integer',
+                            example: 57,
+                          },
+                          totalPages: {
+                            type: 'integer',
+                            example: 6,
+                          },
+                        },
+                      },
                     },
                   },
                 },
