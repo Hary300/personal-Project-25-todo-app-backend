@@ -84,6 +84,28 @@ export const todoDocs: OpenAPIV3.PathsObject = {
           bearerAuth: [],
         },
       ],
+      parameters: [
+        {
+          in: 'query',
+          name: 'page',
+          required: false,
+          schema: {
+            type: 'integer',
+            default: 1,
+          },
+          description: 'Page number',
+        },
+        {
+          in: 'query',
+          name: 'limit',
+          required: false,
+          schema: {
+            type: 'integer',
+            default: 10,
+          },
+          description: 'Limit',
+        },
+      ],
       responses: {
         '200': {
           description: 'Todos retrieved successfully',
