@@ -16,6 +16,7 @@ import { validate } from '../middlewares/validate.js';
 
 const router = Router();
 
+// CRUD
 // CREATE (POST)
 router.post('/', validate(todoSchema), CreateNewTodo);
 
