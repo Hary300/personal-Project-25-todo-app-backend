@@ -37,17 +37,18 @@ export const CreateNewTodo = async (req: Request, res: Response) => {
 export const GetAllTodos = async (req: Request, res: Response) => {
   try {
     const { limit, q, page } = querySchema.parse(req.query);
-
+    const userId = req.user!.id;
     const skip = (page - 1) * limit;
 
-    const filter = q
-      ? {
-          task: {
-            $regex: q,
-            $options: 'i',
-          },
-        }
-      : {};
+    const filter = {
+      userId,
+      ...(q && {
+        task: {
+          $regex: q,
+          $options: 'i',
+        },
+      }),
+    };
     const total = await Todo.countDocuments(filter);
 
     const allTodos = await Todo.find(filter)
@@ -261,6 +262,10 @@ export const DeleteTodo = async (req: Request, res: Response) => {
     const userId = req.user!.id;
     const { id } = req.params;
 
+    console.log('=== DELETE TODO ===');
+    console.log('id:', id);
+    console.log('userId:', userId);
+
     if (!id) {
       return sendError(res, 400, 'Todo ID is required');
     }
@@ -269,6 +274,8 @@ export const DeleteTodo = async (req: Request, res: Response) => {
       _id: id,
       userId,
     });
+
+    console.log('deletedTodo:', deletedTodo);
 
     if (!deletedTodo) {
       return sendError(res, 404, 'Todo not found');
