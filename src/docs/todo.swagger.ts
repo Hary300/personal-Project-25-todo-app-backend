@@ -1,5 +1,8 @@
 import type { OpenAPIV3 } from 'openapi-types';
 
+export const PRIORITIES = ['low', 'medium', 'high'] as const;
+export const TODO_VIEWS = ['all', 'today', 'upcoming', 'completed'] as const;
+
 export const todoDocs: OpenAPIV3.PathsObject = {
   '/todos': {
     // POST
@@ -85,6 +88,27 @@ export const todoDocs: OpenAPIV3.PathsObject = {
         },
       ],
       parameters: [
+        {
+          in: 'query',
+          name: 'priority',
+          required: false,
+          schema: {
+            type: 'string',
+            enum: [...PRIORITIES],
+          },
+          description: 'Filter todos by priority',
+        },
+        {
+          in: 'query',
+          name: 'view',
+          required: false,
+          schema: {
+            type: 'string',
+            enum: [...TODO_VIEWS],
+            default: 'all',
+          },
+          description: 'Filter todos by view',
+        },
         {
           in: 'query',
           name: 'q',

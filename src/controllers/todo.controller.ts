@@ -36,9 +36,11 @@ export const CreateNewTodo = async (req: Request, res: Response) => {
 // READ
 export const GetAllTodos = async (req: Request, res: Response) => {
   try {
-    const { limit, q, page } = querySchema.parse(req.query);
+    const { limit, q, page, priority, view } = querySchema.parse(req.query);
     const userId = req.user!.id;
     const skip = (page - 1) * limit;
+
+    const { start, end } = getTodayRange();
 
     const filter = {
       userId,
@@ -48,7 +50,23 @@ export const GetAllTodos = async (req: Request, res: Response) => {
           $options: 'i',
         },
       }),
+      ...(view === 'completed' && {
+        completed: true,
+      }),
+      ...(priority && { priority }),
+      ...(view === 'today' && {
+        date: {
+          $gte: start,
+          $lte: end,
+        },
+      }),
+      ...(view === 'upcoming' && {
+        date: {
+          $gte: end,
+        },
+      }),
     };
+
     const total = await Todo.countDocuments(filter);
 
     const allTodos = await Todo.find(filter)
