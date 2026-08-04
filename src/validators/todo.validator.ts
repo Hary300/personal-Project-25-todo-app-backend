@@ -6,3 +6,5 @@ export const todoSchema = z.object({
   date: z.coerce.date(),
   completed: z.boolean(),
 });
+
+export const updateTodoSchema = todoSchema.partial();

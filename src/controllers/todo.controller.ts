@@ -3,6 +3,8 @@ import { Todo } from '../models/Todo.js';
 import { getDateRange, getTodayRange } from '../helpers/getDateRange.js';
 import { sendError, sendSuccess } from '../helpers/response.js';
 import { querySchema } from '../schemas/querySchema.js';
+import { updateTodoSchema } from '../validators/todo.validator.js';
+import { ZodError } from 'zod';
 
 // CREATE
 export const CreateNewTodo = async (req: Request, res: Response) => {
@@ -216,18 +218,19 @@ export const UpdateTodo = async (req: Request, res: Response) => {
   try {
     const userId = req.user!.id;
     const { id } = req.params;
-    const { task, priority, date } = req.body;
 
     if (!id) {
       return sendError(res, 400, 'Todo ID is required');
     }
+
+    const updateData = updateTodoSchema.parse(req.body);
 
     const updatedTodo = await Todo.findOneAndUpdate(
       {
         _id: id,
         userId,
       },
-      { task, priority, date },
+      updateData,
       {
         new: true, // Return the updated document
         runValidators: true, //apply schema validation during update
@@ -239,6 +242,9 @@ export const UpdateTodo = async (req: Request, res: Response) => {
     }
     return sendSuccess(res, 200, 'Todo updated successfully', updatedTodo);
   } catch (err) {
+    if (err instanceof ZodError) {
+      return sendError(res, 400, err.issues[0]?.message ?? 'Validation failed');
+    }
     console.log(err);
     return sendError(res, 500, 'Internal server error');
   }
