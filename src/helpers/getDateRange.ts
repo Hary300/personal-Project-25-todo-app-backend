@@ -1,6 +1,8 @@
+import { toZonedTime } from 'date-fns-tz';
+
 export function getDateRange(date: string | Date) {
   // 1. normalize input to a Date object
-  const d = new Date(date);
+  const d = toZonedTime(new Date(date), 'Asia/Jakarta');
 
   // 2. create a new Date instance (copy) to avoid mutating the original
   const start = new Date(d);
@@ -13,7 +15,7 @@ export function getDateRange(date: string | Date) {
 }
 
 export function getTodayRange() {
-  const now = new Date();
+  const now = toZonedTime(new Date(), 'Asia/Jakarta');
 
   const start = new Date(now);
   const end = new Date(now);
