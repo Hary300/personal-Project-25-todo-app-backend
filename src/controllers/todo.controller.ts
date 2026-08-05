@@ -38,9 +38,8 @@ export const CreateNewTodo = async (req: Request, res: Response) => {
 // READ
 export const GetAllTodos = async (req: Request, res: Response) => {
   try {
-    const { limit, q, page, priority, view } = querySchema.parse(req.query);
+    const { q, priority, view } = querySchema.parse(req.query);
     const userId = req.user!.id;
-    const skip = (page - 1) * limit;
 
     const { start, end } = getTodayRange();
 
@@ -69,22 +68,10 @@ export const GetAllTodos = async (req: Request, res: Response) => {
       }),
     };
 
-    const total = await Todo.countDocuments(filter);
-
-    const allTodos = await Todo.find(filter)
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(limit);
-    const pagination = {
-      page,
-      limit,
-      total,
-      totalPages: Math.ceil(total / limit),
-    };
+    const todos = await Todo.find(filter).sort({ createdAt: -1 });
 
     return sendSuccess(res, 200, 'All todos retrieved successfully', {
-      todos: allTodos,
-      pagination,
+      todos,
     });
   } catch (err) {
     console.log(err);

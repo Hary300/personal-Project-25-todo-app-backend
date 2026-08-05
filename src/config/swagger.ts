@@ -12,9 +12,6 @@ const definition: OpenAPIV3.Document = {
   paths: { ...todoDocs },
   servers: [
     {
-      url: 'http://localhost:3000/api',
-    },
-    {
       url: 'https://personal-project-25-todo-app-backend-production.up.railway.app/api',
     },
   ],

@@ -81,7 +81,7 @@ export const todoDocs: OpenAPIV3.PathsObject = {
     // GET
     get: {
       tags: ['Todos'],
-      summary: 'Get all todos',
+      summary: 'Retrieve todos with optional filters',
       security: [
         {
           bearerAuth: [],
@@ -118,26 +118,6 @@ export const todoDocs: OpenAPIV3.PathsObject = {
           },
           description: 'Search todos by task',
         },
-        {
-          in: 'query',
-          name: 'page',
-          required: false,
-          schema: {
-            type: 'integer',
-            default: 1,
-          },
-          description: 'Page number',
-        },
-        {
-          in: 'query',
-          name: 'limit',
-          required: false,
-          schema: {
-            type: 'integer',
-            default: 10,
-          },
-          description: 'Number of todos per page',
-        },
       ],
       responses: {
         '200': {
@@ -157,34 +137,12 @@ export const todoDocs: OpenAPIV3.PathsObject = {
                   },
                   data: {
                     type: 'object',
-                    required: ['todos', 'pagination'],
+                    required: ['todos'],
                     properties: {
                       todos: {
                         type: 'array',
                         items: {
                           $ref: '#/components/schemas/Todo',
-                        },
-                      },
-                      pagination: {
-                        type: 'object',
-                        required: ['page', 'limit', 'total', 'totalPages'],
-                        properties: {
-                          page: {
-                            type: 'integer',
-                            example: 1,
-                          },
-                          limit: {
-                            type: 'integer',
-                            example: 10,
-                          },
-                          total: {
-                            type: 'integer',
-                            example: 57,
-                          },
-                          totalPages: {
-                            type: 'integer',
-                            example: 6,
-                          },
                         },
                       },
                     },
